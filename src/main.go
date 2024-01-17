@@ -53,5 +53,5 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 }
 
 func ValidParament() (string, bool) {
-	return os.LookupEnv("SecrectName")
+	return os.LookupEnv("SecretName")
 }
