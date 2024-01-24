@@ -30,7 +30,6 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 	}
 
 	var date models.SignUp
-
 	for row, att := range events.Request.UserAttributes {
 		switch row {
 		case "email":
@@ -40,7 +39,6 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 			date.UserUUID = att
 			log.Print(fmt.Sprintf("Sub: %v", date.UserUUID))
 		}
-
 	}
 
 	err := bd.ReadSecret()
@@ -48,7 +46,6 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 		log.Fatalf(fmt.Sprintf("Error al leer el secret: %v", err.Error()))
 		return events, err
 	}
-
 	return events, bd.SignUp(date)
 }
 
