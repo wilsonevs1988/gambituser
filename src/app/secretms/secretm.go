@@ -14,24 +14,29 @@ import (
 
 func GetSecret(ctx context.Context, nameSecret string) (models.SecretRds, error) {
 	var dateSecret models.SecretRds
-	log.Println("---Solicitud de Nombre Secreto---")
+
+	log.Printf("---Solicitud de Nombre Secreto: %s---", nameSecret)
 
 	svc := secretsmanager.NewFromConfig(awsgo.Cfg)
 	key, err := svc.GetSecretValue(ctx, &secretsmanager.GetSecretValueInput{
 		SecretId: aws.String(nameSecret),
 	})
 
-	fmt.Println("Clave: %v", key)
-
 	if err != nil {
-		msnError := fmt.Errorf("%v", err.Error())
-		return dateSecret, msnError
+		return dateSecret, fmt.Errorf("Error al obtener el secreto: %w", err)
 	}
+
+	log.Printf("Valor del secreto: %v", *key.SecretString)
+
+	if key.SecretString == nil {
+		return dateSecret, fmt.Errorf("El secreto no contiene una cadena válida")
+	}
+
+	log.Printf("Clave: %v", key)
 
 	err = json.Unmarshal([]byte(*key.SecretString), &dateSecret)
 	if err != nil {
-		msnError := fmt.Errorf("%v= %v", constants.DeserializationError, err)
-		return dateSecret, msnError
+		return dateSecret, fmt.Errorf("%v= %v", constants.DeserializationError, err)
 	}
 
 	return dateSecret, nil
