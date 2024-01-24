@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"gambituser/src/app/config/awsgo"
 	"gambituser/src/app/config/bd"
-	"gambituser/src/app/constants"
 	"gambituser/src/app/models"
 	events "github.com/aws/aws-lambda-go/events"
 	lambda "github.com/aws/aws-lambda-go/lambda"
@@ -21,12 +20,11 @@ func main() {
 func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfirmation) (events.CognitoEventUserPoolsPostConfirmation, error) {
 	awsgo.InitAws()
 
-	_, validParament := ValidParament()
+	validParament, secretName := ValidParament()
 
 	if !validParament {
-		fmt.Println(constants.ErrorParament)
-		err := errors.New(constants.ErrorParament)
-		return events, err
+		log.Printf("Error: Parámetro '%s' no válido", secretName)
+		return events, errors.New("Error de parámetro")
 	}
 
 	var date models.SignUp
@@ -43,12 +41,14 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 
 	err := bd.ReadSecret()
 	if err != nil {
-		log.Fatalf(fmt.Sprintf("Error al leer el secret: %v", err.Error()))
+		log.Printf("Error al leer el secreto: %v", err)
 		return events, err
 	}
+
 	return events, bd.SignUp(date)
 }
 
-func ValidParament() (string, bool) {
-	return os.LookupEnv("SecretName")
+func ValidParament() (bool, string) {
+	secretName, validParament := os.LookupEnv("SecretName")
+	return validParament, secretName
 }
