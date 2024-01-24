@@ -16,10 +16,10 @@ func SignUp(sign models.SignUp) error {
 	}
 	defer Db.Close()
 
-	insert := "INSERT INTO users (User_Email,User_FirstName,User_LastName,User_Status,User_DateAdd) VALUES ('" + sign.UserEmail + "', '" + sign.UserUUID + "', '" + tools.DateMySql() + "')"
-	fmt.Println(insert)
+	sentencia := "INSERT INTO users (User_Email, User_UUID, User_DateAdd) VALUES ('" + sign.UserEmail + "','" + sign.UserUUID + "','" + tools.DateMySql() + "')"
+	fmt.Println(sentencia)
 
-	_, err = Db.Exec(insert)
+	_, err = Db.Exec(sentencia)
 	if err != nil {
 		return err
 	}
