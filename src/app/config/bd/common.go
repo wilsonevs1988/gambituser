@@ -16,33 +16,30 @@ var Db *sql.DB
 
 func ReadSecret() error {
 	secret, err = secretms.GetSecret(awsgo.Ctx, os.Getenv("SecretName"))
+	if err != nil {
+		return fmt.Errorf("Error al leer el secreto: %w", err)
+	}
 	return err
 }
 
-func DbConnect() error {
-	Db, err = sql.Open("mysql", ConnStr(secret))
+func DbConnect() (*sql.DB, error) {
+	connStr := ConnStr(secret)
+	db, err := sql.Open("mysql", connStr)
 	if err != nil {
-		log.Fatalln("Error al abrir la conexión a la base de datos: ", err.Error())
-		return err
+		return nil, fmt.Errorf("Error al abrir la conexión a la base de datos: %w", err)
 	}
 
-	err = Db.Ping()
+	err = db.Ping()
 	if err != nil {
-		log.Fatalln("Error al recibir respuesta: ", err.Error())
-		return err
+		db.Close()
+		return nil, fmt.Errorf("Error al recibir respuesta: %w", err)
 	}
+
 	log.Print("Conexión exitosa de DB.")
-	return err
+	return db, nil
 }
 
 func ConnStr(keys models.SecretRds) string {
-	var dbUser, authToken, dbEndpoint, dbName string
-
-	dbUser = keys.UserName
-	authToken = keys.Password
-	dbEndpoint = keys.Host
-	dbName = "gambit"
-
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?allowCleartextPasswords=true",
-		dbUser, authToken, dbEndpoint, dbName)
+		keys.UserName, keys.Password, keys.Host, "gambit")
 }
