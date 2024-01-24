@@ -5,6 +5,6 @@ type SecretRds struct {
 	Password            string `json:"password"`
 	Engine              string `json:"engine"`
 	Host                string `json:"host"`
-	Port                string `json:"port"`
+	Port                int    `json:"port"`
 	DbClusterIdentifier string `json:"dbClusterIdentifier"`
 }
