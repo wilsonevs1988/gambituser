@@ -6,6 +6,7 @@ import (
 	"gambituser/src/app/config/awsgo"
 	"gambituser/src/app/models"
 	"gambituser/src/app/secretms"
+	_ "github.com/go-sql-driver/mysql"
 	"log"
 	"os"
 )
