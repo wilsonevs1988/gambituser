@@ -7,6 +7,7 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.24.1
 	github.com/aws/aws-sdk-go-v2/config v1.26.3
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.26.2
+	github.com/go-sql-driver/mysql v1.7.1
 )
 
 require (
@@ -21,5 +22,4 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.21.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.26.7 // indirect
 	github.com/aws/smithy-go v1.19.0 // indirect
-	github.com/go-sql-driver/mysql v1.7.1 // indirect
 )
