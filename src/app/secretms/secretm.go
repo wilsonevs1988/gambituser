@@ -14,12 +14,15 @@ import (
 
 func GetSecret(ctx context.Context, nameSecret string) (models.SecretRds, error) {
 	var dateSecret models.SecretRds
-	log.Println("--- Solicitud de Nombre Secreto ---")
+	log.Println("---Solicitud de Nombre Secreto---")
 
 	svc := secretsmanager.NewFromConfig(awsgo.Cfg)
 	key, err := svc.GetSecretValue(ctx, &secretsmanager.GetSecretValueInput{
 		SecretId: aws.String(nameSecret),
 	})
+
+	fmt.Println("Clave: %v", key)
+
 	if err != nil {
 		msnError := fmt.Errorf("%v", err.Error())
 		return dateSecret, msnError

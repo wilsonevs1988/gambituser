@@ -31,12 +31,18 @@ func DbConnect() error {
 		log.Fatalln("Error al recibir respuesta: ", err.Error())
 		return err
 	}
-	log.Print("Conexión exitosa")
+	log.Print("Conexión exitosa de DB.")
 	return err
 }
 
 func ConnStr(keys models.SecretRds) string {
-	dbName := "gambit"
+	var dbUser, authToken, dbEndpoint, dbName string
+
+	dbUser = keys.UserName
+	authToken = keys.Password
+	dbEndpoint = keys.Host
+	dbName = "gambit"
+
 	return fmt.Sprintf("%s:%s@tcp(%s)/%s?allowCleartextPasswords=true",
-		keys.UserName, keys.Password, keys.Host, dbName)
+		dbUser, authToken, dbEndpoint, dbName)
 }

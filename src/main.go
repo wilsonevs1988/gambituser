@@ -20,12 +20,12 @@ func main() {
 
 func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfirmation) (events.CognitoEventUserPoolsPostConfirmation, error) {
 	awsgo.InitAws()
-	var err error
 
 	_, validParament := ValidParament()
+
 	if !validParament {
 		fmt.Println(constants.ErrorParament)
-		err = errors.New(constants.ErrorParament)
+		err := errors.New(constants.ErrorParament)
 		return events, err
 	}
 
@@ -43,7 +43,7 @@ func MyLambda(ctx context.Context, events events.CognitoEventUserPoolsPostConfir
 
 	}
 
-	err = bd.ReadSecret()
+	err := bd.ReadSecret()
 	if err != nil {
 		log.Fatalf(fmt.Sprintf("Error al leer el secret: %v", err.Error()))
 		return events, err
