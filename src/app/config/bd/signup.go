@@ -10,18 +10,19 @@ import (
 func SignUp(sign models.SignUp) error {
 	log.Print("Registro iniciado")
 
-	err := DbConnect()
+	db, err := DbConnect()
 	if err != nil {
-		return err
+		return fmt.Errorf("Error al conectar a la base de datos: %w", err)
 	}
-	defer Db.Close()
+	defer db.Close()
 
-	sentencia := "INSERT INTO users (User_Email, User_UUID, User_DateAdd) VALUES ('" + sign.UserEmail + "','" + sign.UserUUID + "','" + tools.DateMySql() + "')"
+	sentencia := "INSERT INTO users (User_Email, User_UUID, User_DateAdd) VALUES (?, ?, ?)"
 	fmt.Println(sentencia)
 
-	_, err = Db.Exec(sentencia)
+	_, err = db.Exec(sentencia, sign.UserEmail, sign.UserUUID, tools.DateMySql())
 	if err != nil {
-		return err
+		return fmt.Errorf("Error al ejecutar la consulta: %w", err)
 	}
+
 	return nil
 }
